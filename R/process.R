@@ -1,12 +1,11 @@
-#' @exportFrom dplyr left_join
-#' @exportFrom ggplot2 fortify
-#' @exportFrom maptools read
-#' @example
+#' @importFrom dplyr left_join
+#' @importFrom ggplot2 fortify
+#' @importFrom maptools read
+#' @examples
 #' states <- process_shape("data-raw/tl_2016_us_state/tl_2016_us_state.shp")
 #' states <- states %>% mutate(
 #' long = replace(long, long > 100, long[long > 100]-360)
 #' )
-#' save(states, file="data/states.rda")
 process_shape <- function(path) {
   stopifnot(file.exists(path))
 
@@ -18,7 +17,7 @@ process_shape <- function(path) {
 }
 
 #' @export
-#' @example
+#' @examples
 #' states01 <- states01 %>% group_by(group) %>% mutate(bbox = diff(range(long))*diff(range(lat)))
 #' states01 <- states01 %>% filter(bbox > 0.15)
 #' states01 %>% ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group))
