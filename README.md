@@ -32,18 +32,12 @@ This map is available as data object `inset`.
 Sampling from a uniform distribution
 ====================================
 
-This is what 3200 uniformly sampled locations across the US look like:
-
-    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## character vector and factor, coercing into character vector
+Below are maps of the US overlaid by about 3200 points each. The points
+are placed uniformly within the geographic region. The number of points
+in each region is based on different strategies. From left to right we
+have: (top-left) a sample of locations selected uniformly across the US,
+(top-right) each state contains a set of 63 uniformly selected
+locations, (bottom-left) each dot represents about 100k residents in
+each state.
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
-
-This is what the geographic distribution looks like when we sample 64
-locations randomly from each state:
-![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png)
-
-The map below is based state-wide population estimates published by the
-US Census Bureau for 2015. Each dot represents about 100,000 residents
-in each state:
-![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
