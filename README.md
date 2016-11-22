@@ -32,15 +32,13 @@ Sampling from a uniform distribution
 ====================================
 
 This is what 3200 uniformly sampled locations across the US look like:
-![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png) This is
-what the geographic distribution looks like when we sample 64 locations
-randomly from each state:
-![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png) The map
-below is based state-wide population estimates published by the US
-Census Bureau for 2015. Each dot respresents about 100,000 residents in
-each state:
+![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
-    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## character vector and factor, coercing into character vector
+This is what the geographic distribution looks like when we sample 64
+locations randomly from each state:
+![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
+The map below is based state-wide population estimates published by the
+US Census Bureau for 2015. Each dot respresents about 100,000 residents
+in each state:
 ![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
