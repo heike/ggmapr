@@ -76,6 +76,8 @@ compute_tol <- function(points, offset = 0) {
   }
 }
 
+#' Simplify a polygon shape by straightening out jittery lines
+#'
 #' @export
 #' @examples
 #' states05 <- simplify(states, 0.001)

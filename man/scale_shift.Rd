@@ -2,8 +2,12 @@
 % Please edit documentation in R/process.R
 \name{scale_shift}
 \alias{scale_shift}
+\title{scale and shift individual regions in a map}
 \usage{
 scale_shift(map, variable, regions, scale = 1, shift = c(0, 0))
+}
+\description{
+scale and shift individual regions in a map
 }
 \examples{
 states01 <- states01 \%>\% group_by(group) \%>\% mutate(bbox = diff(range(long))*diff(range(lat)))

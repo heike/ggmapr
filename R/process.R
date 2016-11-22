@@ -1,6 +1,9 @@
+#' read shape file
+#'
 #' @importFrom dplyr left_join
 #' @importFrom ggplot2 fortify
-#' @importFrom maptools read
+#' @importFrom maptools readShapePoly
+#' @export
 #' @examples
 #' states <- process_shape("data-raw/tl_2016_us_state/tl_2016_us_state.shp")
 #' states <- states %>% mutate(
@@ -16,6 +19,8 @@ process_shape <- function(path) {
   dplyr::left_join(polys, data, by="id")
 }
 
+#' scale and shift individual regions in a map
+#'
 #' @export
 #' @examples
 #' states01 <- states01 %>% group_by(group) %>% mutate(bbox = diff(range(long))*diff(range(lat)))

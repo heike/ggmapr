@@ -2,8 +2,12 @@
 % Please edit documentation in R/process.R
 \name{process_shape}
 \alias{process_shape}
+\title{read shape file}
 \usage{
 process_shape(path)
+}
+\description{
+read shape file
 }
 \examples{
 states <- process_shape("data-raw/tl_2016_us_state/tl_2016_us_state.shp")

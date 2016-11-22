@@ -2,8 +2,12 @@
 % Please edit documentation in R/simplify.R
 \name{simplify}
 \alias{simplify}
+\title{Simplify a polygon shape by straightening out jittery lines}
 \usage{
 simplify(map, tol = 0.01)
+}
+\description{
+Simplify a polygon shape by straightening out jittery lines
 }
 \examples{
 states05 <- simplify(states, 0.001)
