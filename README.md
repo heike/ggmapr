@@ -6,6 +6,8 @@ pull-outs or zooms:
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-2-1.png)
 
+This map is saved as object `division` in the package.
+
 Map of **all** US states and state equivalents as defined by the 2016
 Tiger shapefiles provided by the US Census Bureau:
 
@@ -16,11 +18,12 @@ Tiger shapefiles provided by the US Census Bureau:
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-3-1.png)
 
-The function `scale_shift` allows to scale and shift parts of the map:
+The functions `scale` and `shift` allow us to scale and shift parts of
+the map:
 
     states %>%
-      scale_shift("NAME", "Hawaii", shift = c(52.5, 5.5)) %>%
-      scale_shift("NAME", "Alaska", scale=0.3, shift=c(39,-32.5)) %>%
+      shift("NAME", "Hawaii", shift_by = c(52.5, 5.5)) %>%
+      scale("NAME", "Alaska", scale=0.3, set_to=c(-117, 27)) %>%
       filter(lat > 20) %>%
      ggplot(aes(long, lat)) + geom_path(aes(group=group)) +
       ggthemes::theme_map() 
@@ -28,6 +31,16 @@ The function `scale_shift` allows to scale and shift parts of the map:
 ![](README_files/figure-markdown_strict/unnamed-chunk-5-1.png)
 
 This map is available as data object `inset`.
+
+Looking for counties as well? The objects `counties` and
+`counties_inset` are available in the data objects.
+
+    counties_inset %>% ggplot(aes(x = long, y = lat)) +
+      geom_path(aes(group = group), size=0.25) +
+      geom_path(aes(group = group), data = inset) +
+      ggthemes::theme_map() 
+
+![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
 
 Sampling from a uniform distribution
 ====================================
@@ -40,7 +53,7 @@ have: (top-left) a sample of locations selected uniformly across the US,
 locations, (bottom-left) each dot represents about 100k residents in
 each state.
 
-![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
 Thanksgiving traditions
 =======================
@@ -69,7 +82,7 @@ What else can we find out from the data about Thanksgiving traditions?
                           values = c("forestgreen", "orange", "steelblue")) +
       coord_flip()
 
-![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
 This translates to a FiveThirtyEight style chart of disproportionally
 most common way of preparing the main dish:
@@ -77,8 +90,8 @@ most common way of preparing the main dish:
     ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
     ## factor and character vector, coercing into character vector
 
-![](README_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
 Let's just use the raw data and put those on the map:
 
-![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
+![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)
