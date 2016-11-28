@@ -41,3 +41,44 @@ locations, (bottom-left) each dot represents about 100k residents in
 each state.
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-6-1.png)
+
+Thanksgiving traditions
+=======================
+
+In 2015 FiveThirtyEight commissioned a survey asking people across the
+US a number of Thanksgiving related questions, such as side dishes,
+flavor of the pie, desserts and after dinner activities. They reported
+on the main difference in an article published on Nov 20 2015, available
+at
+[](http://fivethirtyeight.com/features/heres-what-your-part-of-america-eats-on-thanksgiving/).
+The main finding was shown in a choropleth chart highlighting the
+**disproportionally most common side dish** in each region.
+
+The dataset with responses of more than 1000 participants is available
+at:
+[](https://github.com/fivethirtyeight/data/blob/master/thanksgiving-2015/thanksgiving-2015-poll-data.csv)
+
+The FiveThirtyEight chart is fun, but it doesn't show the whole picture.
+What else can we find out from the data about Thanksgiving traditions?
+
+    thanks %>% 
+      filter(`How.is.the.main.dish.typically.cooked.` %in% c("Baked", "Roasted", "Fried"),
+             !is.na(Division)) %>%
+      ggplot(aes(x = Division, fill = `How.is.the.main.dish.typically.cooked.`)) + geom_bar(position='fill') +
+        scale_fill_manual("How is the main dish\ntypically cooked", 
+                          values = c("forestgreen", "orange", "steelblue")) +
+      coord_flip()
+
+![](README_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+
+This translates to a FiveThirtyEight style chart of disproportionally
+most common way of preparing the main dish:
+
+    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
+    ## factor and character vector, coercing into character vector
+
+![](README_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+
+Let's just use the raw data and put those on the map:
+
+![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
