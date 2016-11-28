@@ -2,7 +2,8 @@
 
 export(map_unif)
 export(process_shape)
-export(scale_shift)
+export(scale)
+export(shift)
 export(simplify)
 importFrom(dplyr,left_join)
 importFrom(ggplot2,fortify)
