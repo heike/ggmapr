@@ -63,35 +63,47 @@ US a number of Thanksgiving related questions, such as side dishes,
 flavor of the pie, desserts and after dinner activities. They reported
 on the main difference in an article published on Nov 20 2015, available
 at
-[](http://fivethirtyeight.com/features/heres-what-your-part-of-america-eats-on-thanksgiving/).
-The main finding was shown in a choropleth chart highlighting the
-**disproportionally most common side dish** in each region.
+![](http://fivethirtyeight.com/features/heres-what-your-part-of-america-eats-on-thanksgiving/).
 
 The dataset with responses of more than 1000 participants is available
-at:
-[](https://github.com/fivethirtyeight/data/blob/master/thanksgiving-2015/thanksgiving-2015-poll-data.csv)
+from FiveThirtEight's
+<a href="https://github.com/fivethirtyeight/data/blob/master/thanksgiving-2015/thanksgiving-2015-poll-data.csv">data
+git hub repository</a>.
+
+The main finding was shown in a choropleth chart highlighting the
+**disproportionally most common side dish** in each region.
 
 The FiveThirtyEight chart is fun, but it doesn't show the whole picture.
 What else can we find out from the data about Thanksgiving traditions?
 
-    thanks %>% 
-      filter(`How.is.the.main.dish.typically.cooked.` %in% c("Baked", "Roasted", "Fried"),
-             !is.na(Division)) %>%
-      ggplot(aes(x = Division, fill = `How.is.the.main.dish.typically.cooked.`)) + geom_bar(position='fill') +
-        scale_fill_manual("How is the main dish\ntypically cooked", 
-                          values = c("forestgreen", "orange", "steelblue")) +
-      coord_flip()
-
+Looking at how participants said to prepare their turkeys we see that
+the country is mostly divided between Roasting and Baking the turkey,
+but some proportion of participants said that their turkey was being
+fried (orange). When we look closer, we see that there is a geographical
+component to where turkeys are getting fried.
 ![](README_files/figure-markdown_strict/unnamed-chunk-9-1.png)
 
-This translates to a FiveThirtyEight style chart of disproportionally
-most common way of preparing the main dish:
-
-    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## factor and character vector, coercing into character vector
+For the side dishes, FiveThirtyEight styled a chart showing the
+***disproportionally most common*** side dish. We have adapted the
+underlying model to deal with the ***disproportionally most common***
+way of preparing the main dish. This gives a nice and simple map like
+this:
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-10-1.png)
 
-Let's just use the raw data and put those on the map:
+We see that in the South and South East turkey's are being fried
+disproportionally most often, whereas everywhere else it is a toss-up
+between roasting and baking the bird. But is that the whole picture ...
+and what does disproprotionally most common actually mean?
+
+Let's go back to the raw data and put those on the map:
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-11-1.png)
+
+We get a similar picture, if not quite as simple as the previous map -
+but data is rarely that simple! We still see the toss-up between baking
+and roasting. And it looks like the bakers of turkey are in the lead in
+the North East and the Mounatin division. What we also see is the
+geographical connection of the fried turkeys: the South and South East
+sees more of them, but there are some friers all along the East Coast,
+that we didn't see before.
