@@ -112,3 +112,12 @@ the North East and the Mounatin division. What we also see is the
 geographical connection of the fried turkeys: the South and South East
 sees more of them, but there are some friers all along the East Coast,
 that we didn't see before.
+
+Going back to the (loglinear) model of the ways turkeys are cooked by
+division, we can visualize the residuals using randomly picked locations
+in each of the divisions.
+
+    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
+    ## factor and character vector, coercing into character vector
+
+![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png)
