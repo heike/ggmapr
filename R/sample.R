@@ -38,3 +38,4 @@ map_unif <- function(map, n) {
 
   dsample %>% sample_n(n)
 }
+

@@ -55,15 +55,20 @@ each state.
 
 ![](README_files/figure-markdown_strict/unnamed-chunk-7-1.png)
 
+The function underlying the map based random sampling is `map_unif`.
+This function takes a map (or a subset of a map) and a number `n` and
+produces a dataset of `n` uniformly distributed random geo-locations
+within the area specified by the map.
+
 Thanksgiving traditions
 =======================
 
 In 2015 FiveThirtyEight commissioned a survey asking people across the
 US a number of Thanksgiving related questions, such as side dishes,
 flavor of the pie, desserts and after dinner activities. They reported
-on the main difference in an article published on Nov 20 2015, available
-at
-![](http://fivethirtyeight.com/features/heres-what-your-part-of-america-eats-on-thanksgiving/).
+on the main difference in an
+<a href="http://fivethirtyeight.com/features/heres-what-your-part-of-america-eats-on-thanksgiving/">article
+published on Nov 20 2015</a>.
 
 The dataset with responses of more than 1000 participants is available
 from FiveThirtEight's
