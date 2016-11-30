@@ -117,7 +117,11 @@ Going back to the (loglinear) model of the ways turkeys are cooked by
 division, we can visualize the residuals using randomly picked locations
 in each of the divisions.
 
-    ## Warning in left_join_impl(x, y, by$x, by$y, suffix$x, suffix$y): joining
-    ## factor and character vector, coercing into character vector
-
 ![](README_files/figure-markdown_strict/unnamed-chunk-12-1.png)
+
+What we see now, is the geographical pattern from before: fried turkeys
+are (disproportionally) most common in the South East, and we see the
+split between baked and roasted turkey across the country - with roasted
+turkey in particular most popular in New England. What we find
+additionally, though, is that besides fried turkey in the South East, we
+also see a liking of baked turkey that was not apparent before.
