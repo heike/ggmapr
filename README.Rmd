@@ -1,0 +1,251 @@
+---
+title: "mapr"
+author: "Heike Hofmann"
+date: "November 19, 2016"
+output: md_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# mapr
+
+This R package is helping with working with maps by making insets, pull-outs or zooms:
+
+```{r echo =FALSE, message=FALSE}
+library(ggplot2)
+library(dplyr)
+library(mapr)
+```
+
+```{r, echo = FALSE}
+inset %>%
+  shift("DIVISION", 1, shift_by=c(7.5, 0)) %>%
+  shift("DIVISION", 2, shift_by=c(5, 0)) %>%
+  shift("DIVISION", 3, shift_by=c(2.5, 0)) %>%
+  shift("DIVISION", 5, shift_by=c(5, -1.5)) %>%
+  shift("DIVISION", 6, shift_by=c(2.5, -1.5)) %>%
+  shift("DIVISION", 9, shift_by=c(-5, 0)) %>%
+  shift("DIVISION", 8, shift_by=c(-2.5, 0)) %>%
+  shift("DIVISION", 7, shift_by=c(0, -1.5)) %>%
+  filter(lat > 20) %>%
+  ggplot(aes(long, lat)) + geom_polygon(aes(group=group, fill=factor(DIVISION))) +
+  ggtitle("US states by division") +
+  scale_fill_brewer(palette="Paired") +
+  ggthemes::theme_map() +
+  theme(legend.position = "none") 
+```
+
+This map is saved as object `division` in the package.
+
+Map of __all__ US states and state equivalents as defined by the 2016 Tiger shapefiles provided by the US Census Bureau:
+
+```{r}
+data(states)
+states %>% 
+  ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group)) +
+  ggthemes::theme_map()
+```
+
+
+The functions `scale` and `shift` allow us to scale and shift parts of the map:
+
+```{r, echo = FALSE}
+#states <- states %>% group_by(group) %>% mutate(bbox = diff(range(long))*diff(range(lat)))
+#states <- states %>% filter(bbox > 0.15)
+```
+
+```{r}
+states %>%
+  shift("NAME", "Hawaii", shift_by = c(52.5, 5.5)) %>%
+  scale("NAME", "Alaska", scale=0.3, set_to=c(-117, 27)) %>%
+  filter(lat > 20) %>%
+ ggplot(aes(long, lat)) + geom_path(aes(group=group)) +
+  ggthemes::theme_map() 
+```
+
+This map is available as data object `inset`. 
+
+
+Looking for counties as well? The objects `counties` and `counties_inset` are available in the data objects.
+
+```{r}
+counties_inset %>% ggplot(aes(x = long, y = lat)) +
+  geom_path(aes(group = group), size=0.25) +
+  geom_path(aes(group = group), data = inset) +
+  ggthemes::theme_map() 
+```
+
+# Sampling from a uniform distribution
+
+Below are maps of the US overlaid by about 3200 points each. The points are placed uniformly within the geographic region. The number of points in each region is based on different strategies. From left to right we have: (top-left) a sample of locations selected uniformly across the US, (top-right) each state contains a set of 63 uniformly selected locations, (bottom-left) each dot represents about 100k residents in each state.
+
+```{r, echo = FALSE, warning = FALSE, fig.width = 10, fig.height = 7}
+data(inset)
+df1 <- inset %>% map_unif(3215)
+df1$NAME <- NA
+df1$type = "Uniform Sample"
+
+statelist <- inset %>% tidyr::nest(-NAME)
+statelist$sample <- statelist$data %>% purrr::map(.f = function(d) d %>% map_unif(63))
+df2 <- statelist %>% select(-data) %>% tidyr::unnest()
+df2$type = "63 Samples from each state"
+
+data(crimes)
+population <- crimes %>% filter(Year == max(Year))
+population <- population %>% mutate(
+  Abb = as.character(Abb),
+  Abb = replace(Abb, Abb == "D.C.", "DC"))
+popmap <- left_join(inset, population[,c("Abb", "Population")], by=c("STUSPS"="Abb"))
+poplist <- popmap %>% tidyr::nest(-NAME)
+poplist$sample <- poplist$data %>% 
+  purrr::map(.f = function(d) d %>% map_unif(n = round(d$Population[1]/100000)))
+df3 <- poplist %>% select(-data) %>% tidyr::unnest()
+df3$type = "Population based sample from each state"
+
+df <- rbind(df1, df2, df3)
+dl <- levels(factor(df$type))
+df$type <- factor(df$type, levels = dl[c(3,1,2)])
+inset %>% ggplot(aes(x = long, y = lat)) +
+   geom_path(aes(group = group)) +
+   geom_point(data = df, colour = "red", size = .25) +
+  ggthemes::theme_map() +
+  facet_wrap(~type, nrow=2)
+```
+
+
+The function underlying the map based random sampling is `map_unif`. This function takes a map (or a subset of a map) and a number `n` and produces a dataset of `n` uniformly distributed random geo-locations within the area specified by the map.
+
+
+# Thanksgiving traditions
+
+In 2015 FiveThirtyEight  commissioned a survey asking people across the US a number of Thanksgiving related questions, such as side dishes, flavor of the pie, desserts and after 
+dinner activities. They reported on the main difference in an <a href="http://fivethirtyeight.com/features/heres-what-your-part-of-america-eats-on-thanksgiving/">article published on Nov 20 2015</a>. 
+
+The dataset with responses of more than 1000 participants is available from FiveThirtEight's <a href="https://github.com/fivethirtyeight/data/blob/master/thanksgiving-2015/thanksgiving-2015-poll-data.csv">data git hub repository</a>.
+
+The main finding was shown in a choropleth chart highlighting the __disproportionally most common side dish__ in each region.
+
+The FiveThirtyEight chart is fun, but it doesn't show the whole picture. What else can we find out from the data about Thanksgiving traditions? 
+
+```{r, echo = FALSE}
+thanks <- read.csv("https://raw.githubusercontent.com/fivethirtyeight/data/master/thanksgiving-2015/thanksgiving-2015-poll-data.csv")
+
+thanks <- thanks %>% mutate(
+  Age = replace(Age, Age=="", NA),
+  What.is.your.gender. = replace(What.is.your.gender., What.is.your.gender.=="", NA),
+  How.would.you.describe.where.you.live. = 
+    replace(How.would.you.describe.where.you.live.,
+            How.would.you.describe.where.you.live.=="", NA),
+  How.much.total.combined.money.did.all.members.of.your.HOUSEHOLD.earn.last.year. =
+    replace(How.much.total.combined.money.did.all.members.of.your.HOUSEHOLD.earn.last.year., 
+            How.much.total.combined.money.did.all.members.of.your.HOUSEHOLD.earn.last.year.=="", NA),
+  US.Region = replace(US.Region, US.Region=="", NA))
+
+names(thanks)[match("How.would.you.describe.where.you.live.", names(thanks))] <- "Location"
+names(thanks)[match("What.is.your.gender.", names(thanks))] <- "Gender"
+names(thanks)[match("How.much.total.combined.money.did.all.members.of.your.HOUSEHOLD.earn.last.year.", names(thanks))] <- "Income"
+names(thanks)[match("US.Region", names(thanks))] <- "Division"    
+```
+
+Looking at how participants said to prepare their turkeys we see that the country is mostly divided between Roasting and Baking the turkey, but some proportion of participants said that their turkey was being fried (orange). When we look closer, we see that there is a geographical component to where turkeys are getting fried.
+```{r echo = FALSE}
+thanks %>% 
+  filter(`How.is.the.main.dish.typically.cooked.` %in% c("Baked", "Roasted", "Fried"),
+         !is.na(Division)) %>%
+  ggplot(aes(x = Division, fill = `How.is.the.main.dish.typically.cooked.`)) + geom_bar(position='fill') +
+    scale_fill_manual("How is the main dish\ntypically cooked", 
+                      values = c("forestgreen", "orange", "steelblue")) +
+  coord_flip()
+```
+
+For the side dishes, FiveThirtyEight styled a chart showing the ***disproportionally most common*** side dish. We have adapted the underlying model to deal with the ***disproportionally most common*** way of preparing the main dish. This gives a nice and simple map like this:
+
+```{r, echo = FALSE, warning = FALSE}
+cooked.summ <- thanks %>% filter(!is.na(Division)) %>% 
+  filter(`How.is.the.main.dish.typically.cooked.` %in% c("Baked", "Roasted", "Fried"),
+         `What.is.typically.the.main.dish.at.your.Thanksgiving.dinner.` == "Turkey") %>%
+  group_by(Division, cooked =`How.is.the.main.dish.typically.cooked.`) %>% summarize(
+  n = n()
+)
+
+cooked.model <- glm(n~Division+cooked, data = cooked.summ, family=poisson())
+cooked.summ <- cooked.summ %>% ungroup() %>% mutate(
+  resids = resid(cooked.model),
+  popular = c("less", "more")[(resids > 0)+1]
+)
+
+#cooked.summ %>% 
+#  ggplot(aes(x = cooked, weight = resids, fill = popular)) + geom_bar() +
+#  coord_flip() + scale_fill_brewer(palette="Paired") + facet_wrap(~Division)
+
+topchoice <- cooked.summ %>% group_by(Division) %>%
+  summarize(
+    cooked = cooked[which.max(resids)]
+  )
+
+turkey_map <- left_join(inset, topchoice, by=c("DIVISION.NAME"="Division"))
+
+turkey_map %>% 
+  ggplot(aes(x = long, y = lat, group = group, 
+             fill = cooked)) +
+  geom_polygon() + 
+  scale_fill_manual(values = c("forestgreen", "orange", "steelblue")) +
+  ggtitle("... and that turkey is ...?") + 
+  ggthemes::theme_map() 
+```
+
+We see that in the South and South East turkey's are being fried disproportionally most often, whereas everywhere else it is a toss-up between roasting and baking the bird.
+But is that the whole picture ... and what does disproprotionally most common actually mean?
+
+Let's go back to the raw data and put those on the map:
+
+```{r, echo = FALSE, warning = FALSE, fig.width = 12, fig.height = 3.5}
+cookmap <- left_join(division, cooked.summ, by=c("DIVISION.NAME"="Division"))
+cooklist <- cookmap %>% tidyr::nest(-DIVISION, -cooked)
+cooklist$sample <- cooklist$data %>% 
+  purrr::map(.f = function(d) d %>% map_unif(n = round(d$n[1])))
+df <- cooklist %>% select(-data) %>% tidyr::unnest()
+
+division %>% ggplot(aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill="grey90") +
+  geom_path(aes(group = group)) +
+  geom_point(data = df, aes(colour = cooked), alpha = 0.75, size = 2) +
+  ggthemes::theme_map() +
+  scale_colour_manual(values = c("forestgreen", "orange", "steelblue")) +
+  facet_wrap(~cooked) +
+  theme(legend.position = "none")
+```
+
+We get a similar picture, if not quite as simple as the previous map - but data is rarely that simple! We still see the toss-up between baking and roasting. And it looks like the bakers of turkey are in the lead in the North East and the Mounatin division.
+What we also see is the geographical connection of the fried turkeys: the South and South East sees more of them, but there are some friers all along the East Coast, that we didn't see before.
+
+Going back to the (loglinear) model of the ways turkeys are cooked by division, we can visualize the residuals using randomly picked locations in each of the divisions. 
+
+```{r, warning = FALSE, echo = FALSE, fig.width = 12, fig.height = 3.5}
+cook.model <- glm(round(n)~Division+cooked, data = cooked.summ, family=poisson())
+cooked.summ <- cooked.summ %>% ungroup %>% mutate(
+  resids = resid(cook.model),
+  popular = c("less", "more")[(resids > 0)+1]
+)
+#cooked.summ %>% ggplot(aes(x = cooked, weight = resids, fill=popular)) +
+#  geom_bar() + coord_flip() + facet_wrap(~Division)
+
+cookmap <- left_join(division, cooked.summ %>% filter(resids > 0), by=c("DIVISION.NAME"="Division"))
+cooklist <- cookmap %>% tidyr::nest(-DIVISION, -cooked)
+cooklist$sample <- cooklist$data %>% 
+  purrr::map(.f = function(d) d %>% map_unif(n = round(d$resids[1]*10)))
+df <- cooklist %>% select(-data) %>% tidyr::unnest()
+
+division %>% ggplot(aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill="grey90") +
+  geom_path(aes(group = group), size=.25) +
+  geom_point(data = df, aes(colour = cooked), size = 2, alpha = .8) +
+  ggthemes::theme_map() +
+  scale_colour_manual(values = c("forestgreen", "orange", "steelblue")) +
+  facet_wrap(~cooked) +
+  theme(legend.position = "none")
+```
+
+What we see now, is the geographical pattern from before: fried turkeys are (disproportionally) most common in the South East, and we see the split between baked and roasted turkey across the country - with roasted turkey in particular most popular in New England. What we find additionally, though, is that besides fried turkey in the South East, we also see a liking of baked turkey that was not apparent before.
