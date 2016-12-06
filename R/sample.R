@@ -1,13 +1,22 @@
 #' Find a uniform sample of points for one region of a map
 #'
-#' place uniform point sample into the region `region` of a map
+#' place uniform point sample into the region `region` of a map.
+#' XXX This function should be rewritten in form of a geom.
+#' @param map data frame with long, lat and group variable
+#' @param n number of locations to sample
+#' @importFrom dplyr select sample_n
+#' @importFrom sp point.in.polygon
+#' @importFrom purrr map
+#' @importFrom tidyr nest unnest
 #' @export
 #' @examples
-#' data(inset01)
-#' df <- inset01 %>% filter(DIVISION == "9") %>% map_unif(1000)
-#' df <- inset01 %>% filter(NAME == "Iowa") %>% map_unif(10)
-#' df <- inset01 %>% map_unif(5000)
-#' inset01 %>% ggplot(aes(x = long, y = lat)) +
+#' library(dplyr)
+#' library(ggplot2)
+#' data(inset)
+#' df <- inset %>% filter(DIVISION == "9") %>% map_unif(1000)
+#' df <- inset %>% filter(NAME == "Iowa") %>% map_unif(10)
+#' df <- inset %>% map_unif(5000)
+#' inset %>% ggplot(aes(x = long, y = lat)) +
 #'   geom_path(aes(group = group)) +
 #'   geom_point(data = df, colour = "red")
 #'
@@ -25,8 +34,8 @@
 map_unif <- function(map, n) {
   rx <- range(map$long, na.rm=TRUE)
   ry <- range(map$lat, na.rm = TRUE)
-  tryx <- runif(3*n, min = rx[1], max = rx[2])
-  tryy <- runif(3*n, min = ry[1], max = ry[2])
+  tryx <- stats::runif(3*n, min = rx[1], max = rx[2])
+  tryy <- stats::runif(3*n, min = ry[1], max = ry[2])
   res <- map %>% tidyr::nest(-group)
   res$sample <- res$data %>% purrr::map(.f = function(d) {
     ins = sp::point.in.polygon(tryx, tryy, d$long, d$lat)

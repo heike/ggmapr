@@ -6,15 +6,23 @@
 \usage{
 map_unif(map, n)
 }
+\arguments{
+\item{map}{data frame with long, lat and group variable}
+
+\item{n}{number of locations to sample}
+}
 \description{
-place uniform point sample into the region `region` of a map
+place uniform point sample into the region `region` of a map.
+XXX This function should be rewritten in form of a geom.
 }
 \examples{
-data(inset01)
-df <- inset01 \%>\% filter(DIVISION == "9") \%>\% map_unif(1000)
-df <- inset01 \%>\% filter(NAME == "Iowa") \%>\% map_unif(10)
-df <- inset01 \%>\% map_unif(5000)
-inset01 \%>\% ggplot(aes(x = long, y = lat)) +
+library(dplyr)
+library(ggplot2)
+data(inset)
+df <- inset \%>\% filter(DIVISION == "9") \%>\% map_unif(1000)
+df <- inset \%>\% filter(NAME == "Iowa") \%>\% map_unif(10)
+df <- inset \%>\% map_unif(5000)
+inset \%>\% ggplot(aes(x = long, y = lat)) +
   geom_path(aes(group = group)) +
   geom_point(data = df, colour = "red")
 

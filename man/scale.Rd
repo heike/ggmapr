@@ -21,15 +21,15 @@ scale(map, variable, regions, scale = 1, set_to = NULL)
 Scale regions in a map
 }
 \examples{
-states01 <- states01 \%>\% group_by(group) \%>\% mutate(bbox = diff(range(long))*diff(range(lat)))
-states01 <- states01 \%>\% filter(bbox > 0.15)
-states01 \%>\% ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group))
-inset01 <- shift(states01, "NAME", "Hawaii", shift_by = c(51, 5.5))
-inset01 <- scale(inset01, "NAME", "Alaska", scale=0.3, set_to=c(-120, 27))
-inset01  \%>\% ggplot(aes(long, lat)) + geom_path(aes(group=group))
-inset01 <- inset01  \%>\%
+states <- states \%>\% group_by(group) \%>\% mutate(bbox = diff(range(long))*diff(range(lat)))
+states <- states \%>\% filter(bbox > 0.15)
+states \%>\% ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group))
+inset <- shift(states, "NAME", "Hawaii", shift_by = c(51, 5.5))
+inset <- scale(inset, "NAME", "Alaska", scale=0.3, set_to=c(-120, 27))
+inset  \%>\% ggplot(aes(long, lat)) + geom_path(aes(group=group))
+inset <- inset  \%>\%
   filter(lat > 20)
-inset01 \%>\%
+inset \%>\%
   ggplot(aes(long, lat)) + geom_path(aes(group=group))
 }
 

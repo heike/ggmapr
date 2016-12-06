@@ -26,22 +26,23 @@ process_shape <- function(path) {
 #' @param regions name(s) of the levels in variable to use for the filter
 #' @param scale numeric vector of length 2 used to scale the map region in longitude and latitude. Scale factors should be positive (negative values flip region).
 #' @param set_to numeric vector of length 2. Set center of the region (defined by range in lat and long) to this longitude and latitude
+#' @importFrom dplyr filter mutate
 #' @export
 #' @examples
-#' states01 <- states01 %>% group_by(group) %>% mutate(bbox = diff(range(long))*diff(range(lat)))
-#' states01 <- states01 %>% filter(bbox > 0.15)
-#' states01 %>% ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group))
-#' inset01 <- shift(states01, "NAME", "Hawaii", shift_by = c(51, 5.5))
-#' inset01 <- scale(inset01, "NAME", "Alaska", scale=0.3, set_to=c(-120, 27))
-#' inset01  %>% ggplot(aes(long, lat)) + geom_path(aes(group=group))
-#' inset01 <- inset01  %>%
+#' states <- states %>% group_by(group) %>% mutate(bbox = diff(range(long))*diff(range(lat)))
+#' states <- states %>% filter(bbox > 0.15)
+#' states %>% ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group))
+#' inset <- shift(states, "NAME", "Hawaii", shift_by = c(51, 5.5))
+#' inset <- scale(inset, "NAME", "Alaska", scale=0.3, set_to=c(-120, 27))
+#' inset  %>% ggplot(aes(long, lat)) + geom_path(aes(group=group))
+#' inset <- inset  %>%
 #'   filter(lat > 20)
-#' inset01 %>%
+#' inset %>%
 #'   ggplot(aes(long, lat)) + geom_path(aes(group=group))
 scale <- function(map, variable, regions, scale = 1, set_to = NULL) {
   map <- data.frame(map)
   map$region__ <- map[,variable]
-  submap <- map %>% filter(region__ %in% regions)
+  submap <- map %>% dplyr::filter(region__ %in% regions)
   mx <- mean(range(submap$long))
   my <- mean(range(submap$lat))
 
@@ -54,12 +55,12 @@ scale <- function(map, variable, regions, scale = 1, set_to = NULL) {
     delta_y  <- set_to[2]
   }
 
-  submap <- submap %>% mutate(
+  submap <- submap %>% dplyr::mutate(
     long = scale[1]*(long - mx) + delta_x,
     lat = scale[2]*(lat - my) + delta_y
   )
 
-  map <- map %>% filter(!(region__ %in% regions))
+  map <- map %>% dplyr::filter(!(region__ %in% regions))
   rbind(map, submap) %>% select(- region__)
 }
 
@@ -70,6 +71,7 @@ scale <- function(map, variable, regions, scale = 1, set_to = NULL) {
 #' @param regions name(s) of the levels in variable to use for the filter
 #' @param shift_by numeric vector of length 2. Relative shift in geographic latitude and longitude.
 #' @param set_to numeric vector of length 2. Set center of the region (defined by range in lat and long) to this longitude and latitude
+#' @importFrom dplyr mutate filter
 #' @export
 #' @examples
 #' data(states01)
@@ -94,7 +96,7 @@ scale <- function(map, variable, regions, scale = 1, set_to = NULL) {
 shift <- function(map, variable, regions, shift_by = c(0,0), set_to = NULL) {
   map <- data.frame(map)
   map$region__ <- map[,variable]
-  submap <- map %>% filter(region__ %in% regions)
+  submap <- map %>% dplyr::filter(region__ %in% regions)
   delta_x <- shift_by[1]
   delta_y <- shift_by[2]
 
@@ -104,13 +106,13 @@ shift <- function(map, variable, regions, shift_by = c(0,0), set_to = NULL) {
     delta_y <- delta_y - mean(range(submap$lat)) + set_to[2]
   }
 
-  submap <- submap %>% mutate(
+  submap <- submap %>% dplyr::mutate(
     long = long + delta_x,
     lat = lat + delta_y
   )
 
-  map <- map %>% filter(!(region__ %in% regions))
-  rbind(map, submap) %>% select(- region__)
+  map <- map %>% dplyr::filter(!(region__ %in% regions))
+  rbind(map, submap) %>% dplyr::select(- region__)
 }
 
 
