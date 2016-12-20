@@ -206,15 +206,13 @@ Let's go back to the raw data and put those on the map:
 
 ```{r, echo = FALSE, warning = FALSE, fig.width = 12, fig.height = 3.5}
 cookmap <- left_join(division, cooked.summ, by=c("DIVISION.NAME"="Division"))
-cooklist <- cookmap %>% tidyr::nest(-DIVISION, -cooked)
-cooklist$sample <- cooklist$data %>% 
-  purrr::map(.f = function(d) d %>% map_unif(n = round(d$n[1])))
-df <- cooklist %>% select(-data) %>% tidyr::unnest()
 
 division %>% ggplot(aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill="grey90") +
-  geom_path(aes(group = group)) +
-  geom_point(data = df, aes(colour = cooked), alpha = 0.75, size = 2) +
+  geom_path(aes(group = group), size = 0.5, colour="white") +
+  stat_polygon_jitter(data = cookmap, 
+      aes(long = long, lat = lat, mapgroup = group, n = n, group = DIVISION, 
+          colour = cooked), alpha = 0.75, size = 2) +
   ggthemes::theme_map() +
   scale_colour_manual(values = c("forestgreen", "orange", "steelblue")) +
   facet_wrap(~cooked) +
@@ -236,15 +234,18 @@ cooked.summ <- cooked.summ %>% ungroup %>% mutate(
 #  geom_bar() + coord_flip() + facet_wrap(~Division)
 
 cookmap <- left_join(division, cooked.summ %>% filter(resids > 0), by=c("DIVISION.NAME"="Division"))
-cooklist <- cookmap %>% tidyr::nest(-DIVISION, -cooked)
-cooklist$sample <- cooklist$data %>% 
-  purrr::map(.f = function(d) d %>% map_unif(n = round(d$resids[1]*10)))
-df <- cooklist %>% select(-data) %>% tidyr::unnest()
+# cooklist <- cookmap %>% tidyr::nest(-DIVISION, -cooked)
+# cooklist$sample <- cooklist$data %>% 
+#   purrr::map(.f = function(d) d %>% map_unif(n = round(d$resids[1]*10)))
+# df <- cooklist %>% select(-data) %>% tidyr::unnest()
 
 division %>% ggplot(aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill="grey90") +
   geom_path(aes(group = group), size=.25) +
-  geom_point(data = df, aes(colour = cooked), size = 2, alpha = .8) +
+#  geom_point(data = df, aes(colour = cooked), size = 2, alpha = .8) +
+  stat_polygon_jitter(data = cookmap, 
+    aes(long=long, lat=lat, group = DIVISION, mapgroup = group, 
+        colour = cooked, n = resids*10), size = 2, alpha = .8) +
   ggthemes::theme_map() +
   scale_colour_manual(values = c("forestgreen", "orange", "steelblue")) +
   facet_wrap(~cooked) +

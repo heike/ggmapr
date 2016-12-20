@@ -1,6 +1,6 @@
 # ggmapr
 Heike Hofmann  
-`r format(Sys.time(), '%d %B, %Y')`  
+`r format(Sys.time(), '%B %d, %Y')`  
 
 
 

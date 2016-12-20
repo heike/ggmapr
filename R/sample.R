@@ -1,3 +1,47 @@
+#' ggplot2 stat for creating a sample of jittered points in a polygon
+#'
+#' @export
+#' @examples
+#' data(division)
+#' data(crimes)
+#' library(dplyr)
+#' crime.map <- left_join(division, crimes, by=c("NAME"="State"))
+#' crime.map %>% ggplot(aes(x = long, y = lat)) +
+#'   geom_polygon(aes(group = group), fill="grey90", colour="white", size = 0.5) +
+#'   stat_polygon_jitter(aes(long = long, lat = lat, group = STATEFP, mapgroup = group, n = Population/200000)) +
+#'   ggthemes::theme_map()
+#'
+#'
+StatPolygon_jitter <- ggproto("StatPolygon_jitter", Stat,
+  required_aes = c("long", "lat","n", "group", "mapgroup"),
+
+  setup_data = function(data, params) {
+    data$mapgroup <- factor(data$mapgroup)
+
+    data
+  },
+  compute_group = function(data, scales) {
+ #   browser()
+    res <- rename(data, Group = group, group = mapgroup)
+    sample <- map_unif(res, round(mean(data$n, na.rm=TRUE),0))
+    rename(sample, mapgroup = group, x = long, y = lat)
+  }
+
+)
+
+#' ggplot2 stat for creating a sample of jittered points in a polygon
+#' @export
+stat_polygon_jitter <- function(mapping = NULL, data = NULL, geom = "point",
+                       position = "identity", na.rm = FALSE, show.legend = NA,
+                       inherit.aes = TRUE, ...) {
+  layer(
+    stat = StatPolygon_jitter, data = data, mapping = mapping, geom = geom,
+    position = position, show.legend = show.legend, inherit.aes = inherit.aes,
+    params = list(na.rm = na.rm, ...)
+  )
+}
+
+
 #' Find a uniform sample of points for one region of a map
 #'
 #' place uniform point sample into the region `region` of a map.
@@ -47,4 +91,3 @@ map_unif <- function(map, n) {
 
   dsample %>% sample_n(n)
 }
-

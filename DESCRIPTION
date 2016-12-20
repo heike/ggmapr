@@ -9,9 +9,9 @@ Description: Tools for working with maps: scale and shift regions on maps.
     Sample random uniform locations in maps.
 License: GPL (>= 3)
 Depends:
-    R (>= 2.10)
+    R (>= 2.10),
+    ggplot2 (>= 2.2)
 Imports:
-    ggplot2,
     dplyr,
     maptools,
     purrr,
