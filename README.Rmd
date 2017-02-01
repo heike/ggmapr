@@ -209,7 +209,7 @@ cookmap <- left_join(division, cooked.summ, by=c("DIVISION.NAME"="Division"))
 
 division %>% ggplot(aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill="grey90") +
-  geom_path(aes(group = group), size = 0.5, colour="white") +
+  geom_path(aes(group = group), size = 0.25) +
   stat_polygon_jitter(data = cookmap, 
       aes(long = long, lat = lat, mapgroup = group, n = n, group = DIVISION, 
           colour = cooked), alpha = 0.75, size = 2) +
@@ -224,25 +224,29 @@ What we also see is the geographical connection of the fried turkeys: the South 
 
 Going back to the (loglinear) model of the ways turkeys are cooked by division, we can visualize the residuals using randomly picked locations in each of the divisions. 
 
-```{r, warning = FALSE, echo = FALSE, fig.width = 12, fig.height = 3.5}
+```{r, warning = FALSE, echo = FALSE}
 cook.model <- glm(round(n)~Division+cooked, data = cooked.summ, family=poisson())
 cooked.summ <- cooked.summ %>% ungroup %>% mutate(
   resids = resid(cook.model),
+  fitted = fitted(cook.model),
   popular = c("less", "more")[(resids > 0)+1]
 )
-#cooked.summ %>% ggplot(aes(x = cooked, weight = resids, fill=popular)) +
-#  geom_bar() + coord_flip() + facet_wrap(~Division)
+```
 
+```{r, warning = FALSE, echo = FALSE, fig.width = 4, fig.height = 3}
+cooked.summ %>% ggplot(aes(x = cooked, weight = fitted, fill = cooked)) + geom_bar() +
+  scale_fill_manual(values = c("forestgreen", "orange", "steelblue")) +
+  theme(legend.position = "none") +
+  ylab("Number of survey respondents") + 
+  xlab("Way of preparing the turkey across all divisions")
+```
+
+```{r, warning = FALSE, echo = FALSE, fig.width = 12, fig.height = 3.5}
 cookmap <- left_join(division, cooked.summ %>% filter(resids > 0), by=c("DIVISION.NAME"="Division"))
-# cooklist <- cookmap %>% tidyr::nest(-DIVISION, -cooked)
-# cooklist$sample <- cooklist$data %>% 
-#   purrr::map(.f = function(d) d %>% map_unif(n = round(d$resids[1]*10)))
-# df <- cooklist %>% select(-data) %>% tidyr::unnest()
 
 division %>% ggplot(aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill="grey90") +
   geom_path(aes(group = group), size=.25) +
-#  geom_point(data = df, aes(colour = cooked), size = 2, alpha = .8) +
   stat_polygon_jitter(data = cookmap, 
     aes(long=long, lat=lat, group = DIVISION, mapgroup = group, 
         colour = cooked, n = resids*10), size = 2, alpha = .8) +
@@ -253,4 +257,9 @@ division %>% ggplot(aes(x = long, y = lat)) +
 ```
 
 What we see now, is the geographical pattern from before: fried turkeys are (disproportionally) most common in the South East, and we see the split between baked and roasted turkey across the country - with roasted turkey in particular most popular in New England. What we find additionally, though, is that besides fried turkey in the South East, we also see a liking of baked turkey that was not apparent before.
+
+
+?maptools::dotsInPolys
+
+Waller and Gotway (2004) Applied Spatial Statistics for Public Health Data (Wiley, Hoboken, NJ) explicitly warn that care is needed in plotting and interpreting dot density maps (pp. 81-83)
 

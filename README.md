@@ -101,7 +101,11 @@ What we also see is the geographical connection of the fried turkeys: the South 
 
 Going back to the (loglinear) model of the ways turkeys are cooked by division, we can visualize the residuals using randomly picked locations in each of the divisions. 
 
-![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
+
+![](README_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
+![](README_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 What we see now, is the geographical pattern from before: fried turkeys are (disproportionally) most common in the South East, and we see the split between baked and roasted turkey across the country - with roasted turkey in particular most popular in New England. What we find additionally, though, is that besides fried turkey in the South East, we also see a liking of baked turkey that was not apparent before.
 
