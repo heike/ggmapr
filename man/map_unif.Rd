@@ -13,7 +13,7 @@ map_unif(map, n)
 }
 \description{
 place uniform point sample into the region `region` of a map.
-XXX This function should be rewritten in form of a geom.
+This function is used in  `stat_polygon_jitter`.
 }
 \examples{
 library(dplyr)
@@ -28,10 +28,13 @@ inset \%>\% ggplot(aes(x = long, y = lat)) +
 
 data(crimes)
 population <- crimes \%>\% filter(Year == max(Year))
-popmap <- left_join(inset, population[,c("Abb", "Population")], by=c("STUSPS"="Abb"))
+popmap <- left_join(inset, population[,c("Abb", "Population")],
+                    by=c("STUSPS"="Abb"))
 poplist <- popmap \%>\% tidyr::nest(-NAME)
-poplist$sample <- poplist$data \%>\% purrr::map(.f = function(d) d \%>\% map_unif(50))
-poplist$sample <- poplist$data \%>\% purrr::map(.f = function(d) d \%>\% map_unif(round(d$Population[1]/50000)))
+poplist$sample <- poplist$data \%>\%
+  purrr::map(.f = function(d) d \%>\% map_unif(50))
+poplist$sample <- poplist$data \%>\%
+  purrr::map(.f = function(d) d \%>\% map_unif(round(d$Population[1]/50000)))
 df <- poplist \%>\% select(-data) \%>\% tidyr::unnest()
 inset \%>\% ggplot(aes(x = long, y = lat)) +
   geom_path(aes(group = group), size = 0.25) +

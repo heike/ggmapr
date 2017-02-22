@@ -1,3 +1,35 @@
+`%>%` <- function (lhs, rhs)
+{
+  parent <- parent.frame()
+  env <- new.env(parent = parent)
+  chain_parts <- split_chain(match.call(), env = env)
+  pipes <- chain_parts[["pipes"]]
+  rhss <- chain_parts[["rhss"]]
+  lhs <- chain_parts[["lhs"]]
+  env[["_function_list"]] <- lapply(1:length(rhss), function(i) wrap_function(rhss[[i]],
+                                                                              pipes[[i]], parent))
+  env[["_fseq"]] <- `class<-`(eval(quote(function(value) freduce(value,
+                                                                 `_function_list`)), env, env), c("fseq", "function"))
+  env[["freduce"]] <- freduce
+  if (is_placeholder(lhs)) {
+    env[["_fseq"]]
+  }
+  else {
+    env[["_lhs"]] <- eval(lhs, parent, parent)
+    result <- withVisible(eval(quote(`_fseq`(`_lhs`)), env,
+                               env))
+    if (is_compound_pipe(pipes[[1L]])) {
+      eval(call("<-", lhs, result[["value"]]), parent,
+           parent)
+    }
+    else {
+      if (result[["visible"]])
+        result[["value"]]
+      else invisible(result[["value"]])
+    }
+  }
+}
+
 #' ggplot2 stat for creating a sample of jittered points in a polygon
 #'
 #' @export
@@ -6,9 +38,10 @@
 #' data(crimes)
 #' library(dplyr)
 #' crime.map <- left_join(division, crimes, by=c("NAME"="State"))
-#' crime.map %>% ggplot(aes(x = long, y = lat)) +
+#' ggplot(data = crime.map, aes(x = long, y = lat)) +
 #'   geom_polygon(aes(group = group), fill="grey90", colour="white", size = 0.5) +
-#'   stat_polygon_jitter(aes(long = long, lat = lat, group = STATEFP, mapgroup = group, n = Population/200000)) +
+#'   stat_polygon_jitter(aes(long = long, lat = lat, group = STATEFP,
+#'                           mapgroup = group, n = Population/200000)) +
 #'   ggthemes::theme_map()
 #'
 #'
@@ -45,7 +78,7 @@ stat_polygon_jitter <- function(mapping = NULL, data = NULL, geom = "point",
 #' Find a uniform sample of points for one region of a map
 #'
 #' place uniform point sample into the region `region` of a map.
-#' XXX This function should be rewritten in form of a geom.
+#' This function is used in  `stat_polygon_jitter`.
 #' @param map data frame with long, lat and group variable
 #' @param n number of locations to sample
 #' @importFrom dplyr select sample_n
@@ -66,10 +99,13 @@ stat_polygon_jitter <- function(mapping = NULL, data = NULL, geom = "point",
 #'
 #' data(crimes)
 #' population <- crimes %>% filter(Year == max(Year))
-#' popmap <- left_join(inset, population[,c("Abb", "Population")], by=c("STUSPS"="Abb"))
+#' popmap <- left_join(inset, population[,c("Abb", "Population")],
+#'                     by=c("STUSPS"="Abb"))
 #' poplist <- popmap %>% tidyr::nest(-NAME)
-#' poplist$sample <- poplist$data %>% purrr::map(.f = function(d) d %>% map_unif(50))
-#' poplist$sample <- poplist$data %>% purrr::map(.f = function(d) d %>% map_unif(round(d$Population[1]/50000)))
+#' poplist$sample <- poplist$data %>%
+#'   purrr::map(.f = function(d) d %>% map_unif(50))
+#' poplist$sample <- poplist$data %>%
+#'   purrr::map(.f = function(d) d %>% map_unif(round(d$Population[1]/50000)))
 #' df <- poplist %>% select(-data) %>% tidyr::unnest()
 #' inset %>% ggplot(aes(x = long, y = lat)) +
 #'   geom_path(aes(group = group), size = 0.25) +

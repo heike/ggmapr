@@ -16,9 +16,10 @@ data(division)
 data(crimes)
 library(dplyr)
 crime.map <- left_join(division, crimes, by=c("NAME"="State"))
-crime.map \%>\% ggplot(aes(x = long, y = lat)) +
+ggplot(data = crime.map, aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill="grey90", colour="white", size = 0.5) +
-  stat_polygon_jitter(aes(long = long, lat = lat, group = STATEFP, mapgroup = group, n = Population/200000)) +
+  stat_polygon_jitter(aes(long = long, lat = lat, group = STATEFP,
+                          mapgroup = group, n = Population/200000)) +
   ggthemes::theme_map()
 
 

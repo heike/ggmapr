@@ -24,14 +24,14 @@ library(ggmapr)
 
 ```{r, echo = FALSE}
 inset %>%
-  shift("DIVISION", 1, shift_by=c(7.5, 0)) %>%
-  shift("DIVISION", 2, shift_by=c(5, 0)) %>%
-  shift("DIVISION", 3, shift_by=c(2.5, 0)) %>%
-  shift("DIVISION", 5, shift_by=c(5, -1.5)) %>%
-  shift("DIVISION", 6, shift_by=c(2.5, -1.5)) %>%
-  shift("DIVISION", 9, shift_by=c(-5, 0)) %>%
-  shift("DIVISION", 8, shift_by=c(-2.5, 0)) %>%
-  shift("DIVISION", 7, shift_by=c(0, -1.5)) %>%
+  shift(DIVISION == 1, shift_by=c(7.5, 0)) %>%
+  shift(DIVISION == 2, shift_by=c(5, 0)) %>%
+  shift(DIVISION == 3, shift_by=c(2.5, 0)) %>%
+  shift(DIVISION == 5, shift_by=c(5, -1.5)) %>%
+  shift(DIVISION == 6, shift_by=c(2.5, -1.5)) %>%
+  shift(DIVISION == 9, shift_by=c(-5, 0)) %>%
+  shift(DIVISION == 8, shift_by=c(-2.5, 0)) %>%
+  shift(DIVISION == 7, shift_by=c(0, -1.5)) %>%
   filter(lat > 20) %>%
   ggplot(aes(long, lat)) + geom_polygon(aes(group=group, fill=factor(DIVISION))) +
   ggtitle("US states by division") +
@@ -54,15 +54,10 @@ states %>%
 
 The functions `scale` and `shift` allow us to scale and shift parts of the map:
 
-```{r, echo = FALSE}
-#states <- states %>% group_by(group) %>% mutate(bbox = diff(range(long))*diff(range(lat)))
-#states <- states %>% filter(bbox > 0.15)
-```
-
 ```{r}
 states %>%
-  shift("NAME", "Hawaii", shift_by = c(52.5, 5.5)) %>%
-  scale("NAME", "Alaska", scale=0.3, set_to=c(-117, 27)) %>%
+  shift(NAME == "Hawaii", shift_by = c(52.5, 5.5)) %>%
+  scale(NAME == "Alaska", scale=0.3, set_to=c(-117, 27)) %>%
   filter(lat > 20) %>%
  ggplot(aes(long, lat)) + geom_path(aes(group=group)) +
   ggthemes::theme_map() 

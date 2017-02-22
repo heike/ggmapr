@@ -2,9 +2,10 @@
 % Please edit documentation in R/data.R
 \docType{data}
 \name{states}
+\alias{inset}
 \alias{states}
 \title{Outline of US states and equivalents}
-\format{a data frame consisting of variables of length 13796:
+\format{both objects are data frames consisting of variables of length ~13k:
 \itemize{
   \item long: geographic longitude
   \item lat: geographic latitude
@@ -29,6 +30,8 @@
 }}
 \usage{
 states
+
+inset
 }
 \description{
 Data from shapefiles provided by the Census Bureau’s MAF/TIGER geographic database at
@@ -39,6 +42,10 @@ on the 1:20m resolution level. Internal points, divisions and regions are based 
 states \%>\% ggplot(aes(x = long, y = lat)) +
   geom_path(aes(group = group)) +
   geom_point(data = states \%>\% map_unif(n = 1000), colour = "red", size = 0.25)
+
+inset \%>\% ggplot(aes(x = long, y = lat)) +
+  geom_path(aes(group = group)) +
+  geom_point(data = inset \%>\% map_unif(n = 1000), colour = "red", size = 0.25)
 }
 \keyword{datasets}
 
