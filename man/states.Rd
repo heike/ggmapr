@@ -2,6 +2,7 @@
 % Please edit documentation in R/data.R
 \docType{data}
 \name{states}
+\alias{division}
 \alias{inset}
 \alias{states}
 \title{Outline of US states and equivalents}
@@ -32,6 +33,8 @@
 states
 
 inset
+
+division
 }
 \description{
 Data from shapefiles provided by the Census Bureau’s MAF/TIGER geographic database at
@@ -46,6 +49,10 @@ states \%>\% ggplot(aes(x = long, y = lat)) +
 inset \%>\% ggplot(aes(x = long, y = lat)) +
   geom_path(aes(group = group)) +
   geom_point(data = inset \%>\% map_unif(n = 1000), colour = "red", size = 0.25)
+
+division \%>\% ggplot(aes(x = long, y = lat)) +
+  geom_path(aes(group = group)) +
+  geom_point(data = division \%>\% map_unif(n = 1000), colour = "red", size = 0.25)
 }
 \keyword{datasets}
 

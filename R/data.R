@@ -26,6 +26,7 @@
 #'   \item INTPTLAT: latitude of interior point
 #'   \item INTPTLON: longitude of interior point
 #' }
+#' @importFrom magrittr %>%
 #' @examples
 #' states %>% ggplot(aes(x = long, y = lat)) +
 #'   geom_path(aes(group = group)) +
@@ -34,10 +35,18 @@
 #' inset %>% ggplot(aes(x = long, y = lat)) +
 #'   geom_path(aes(group = group)) +
 #'   geom_point(data = inset %>% map_unif(n = 1000), colour = "red", size = 0.25)
+#'
+#' division %>% ggplot(aes(x = long, y = lat)) +
+#'   geom_path(aes(group = group)) +
+#'   geom_point(data = division %>% map_unif(n = 1000), colour = "red", size = 0.25)
 "states"
 
 #' @rdname states
 "inset"
+
+#' @rdname states
+"division"
+
 
 #' Outline of US counties
 #'
@@ -76,3 +85,24 @@
 
 #' @rdname counties
 "counties_inset"
+
+
+
+#' Crimes in the US since 1960
+#'
+#' where does this dataset come from?
+#' @format data frame of seven variables and about 23k rows:
+#' \itemize{
+#'   \item State: name of the state
+#'   \item Abb: two-letter state abbreviation
+#'   \item Year: year of the record
+#'   \item Population: state population
+#'   \item Type: type of crime committed
+#'   \item Type2: type of crime committed distinguishing violent and property crimes
+#'   \item Number: number of crimes
+#' }
+#' @examples
+#' crimes %>% filter(Type=="Murder") %>%
+#'   ggplot(aes(x = Year, y = Number/Population)) +
+#'     geom_line(aes(group = State))
+"crimes"
