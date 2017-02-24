@@ -18,6 +18,8 @@ Imports:
     sp,
     tidyr,
     magrittr
+Suggests: 
+    ggthemes
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 5.0.1

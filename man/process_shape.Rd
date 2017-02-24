@@ -6,6 +6,9 @@
 \usage{
 process_shape(path)
 }
+\arguments{
+\item{path}{path to shapefile}
+}
 \description{
 read shape file
 }

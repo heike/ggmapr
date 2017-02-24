@@ -75,12 +75,17 @@
 #'   \item REGION: integer of US region
 #'   \item DIVISION: integer of US division
 #' }
+#' @importFrom magrittr %>%
 #' @examples
+#' \dontrun{
+#' library(ggplot2)
+#' library(magrittr)
 #' counties %>% ggplot(aes(x = long, y = lat)) +
 #'   geom_path(aes(group = group))
 #'
 #' counties_inset %>% ggplot(aes(x = long, y = lat)) +
 #'   geom_path(aes(group = group))
+#' }
 "counties"
 
 #' @rdname counties
@@ -101,8 +106,10 @@
 #'   \item Type2: type of crime committed distinguishing violent and property crimes
 #'   \item Number: number of crimes
 #' }
+#' @importFrom magrittr %>%
 #' @examples
-#' crimes %>% filter(Type=="Murder") %>%
+#' library(magrittr)
+#' crimes %>% dplyr::filter(Type=="Murder") %>%
 #'   ggplot(aes(x = Year, y = Number/Population)) +
 #'     geom_line(aes(group = State))
 "crimes"

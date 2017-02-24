@@ -33,11 +33,19 @@ StatPolygon_jitter <- ggproto("StatPolygon_jitter", Stat,
 )
 
 #' ggplot2 stat for creating a sample of jittered points in a polygon
+#'
+#' @inheritParams ggplot2::stat_identity
+#' @param na.rm binary, remove missing values? Defaults to FALSE
+#' @section Computed variables:
+#' \describe{
+#' \item{x}{location of bottom left corner}
+#' \item{y}{location of bottom right corner}
+#' }
 #' @export
 stat_polygon_jitter <- function(mapping = NULL, data = NULL, geom = "point",
                        position = "identity", na.rm = FALSE, show.legend = NA,
                        inherit.aes = TRUE, ...) {
-  layer(
+  ggplot2::layer(
     stat = StatPolygon_jitter, data = data, mapping = mapping, geom = geom,
     position = position, show.legend = show.legend, inherit.aes = inherit.aes,
     params = list(na.rm = na.rm, ...)
@@ -82,8 +90,11 @@ stat_polygon_jitter <- function(mapping = NULL, data = NULL, geom = "point",
 #'   geom_point(data = df, colour = "red", size = .5) +
 #'   ggthemes::theme_map()
 map_unif <- function(map, n) {
+  data <- group <- NULL
+
   rx <- range(map$long, na.rm=TRUE)
   ry <- range(map$lat, na.rm = TRUE)
+  browser()
   tryx <- stats::runif(3*n, min = rx[1], max = rx[2])
   tryy <- stats::runif(3*n, min = ry[1], max = ry[2])
   res <- map %>% tidyr::nest(-group)

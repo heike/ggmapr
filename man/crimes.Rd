@@ -21,7 +21,8 @@ crimes
 where does this dataset come from?
 }
 \examples{
-crimes \%>\% filter(Type=="Murder") \%>\%
+library(magrittr)
+crimes \%>\% dplyr::filter(Type=="Murder") \%>\%
   ggplot(aes(x = Year, y = Number/Population)) +
     geom_line(aes(group = State))
 }

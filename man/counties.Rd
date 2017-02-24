@@ -38,11 +38,15 @@ Data from shapefiles provided by the Census Bureau’s MAF/TIGER geographic data
 on the 1:20m resolution level. Divisions and regions are based on TIGER/Line Shapefiles for states and equivalents in the 2016 release.
 }
 \examples{
+\dontrun{
+library(ggplot2)
+library(magrittr)
 counties \%>\% ggplot(aes(x = long, y = lat)) +
   geom_path(aes(group = group))
 
 counties_inset \%>\% ggplot(aes(x = long, y = lat)) +
   geom_path(aes(group = group))
+}
 }
 \keyword{datasets}
 
