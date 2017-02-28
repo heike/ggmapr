@@ -94,7 +94,7 @@ map_unif <- function(map, n) {
 
   rx <- range(map$long, na.rm=TRUE)
   ry <- range(map$lat, na.rm = TRUE)
-  browser()
+#  browser()
   tryx <- stats::runif(3*n, min = rx[1], max = rx[2])
   tryy <- stats::runif(3*n, min = ry[1], max = ry[2])
   res <- map %>% tidyr::nest(-group)

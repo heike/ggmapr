@@ -68,6 +68,7 @@ Below are maps of the US overlaid by about 3200 points each. The points are plac
 
 
 The function underlying the map based random sampling is `map_unif`. This function takes a map (or a subset of a map) and a number `n` and produces a dataset of `n` uniformly distributed random geo-locations within the area specified by the map.
+An alternative is implemented as `ggplot2` [@ggplot2] statistic `stat_polygon_jitter`.
 
 
 # Thanksgiving traditions
@@ -111,7 +112,12 @@ Going back to the (loglinear) model of the ways turkeys are cooked by division, 
 What we see now, is the geographical pattern from before: fried turkeys are (disproportionally) most common in the South East, and we see the split between baked and roasted turkey across the country - with roasted turkey in particular most popular in New England. What we find additionally, though, is that besides fried turkey in the South East, we also see a liking of baked turkey that was not apparent before.
 
 
-?maptools::dotsInPolys
+## Some discussion
 
-Waller and Gotway (2004) Applied Spatial Statistics for Public Health Data (Wiley, Hoboken, NJ) explicitly warn that care is needed in plotting and interpreting dot density maps (pp. 81-83)
+Density maps are not new - some of the first examples appear in the Statistical Atlas accompanying the tenth US census of 1880 [@atlas] to show the number and, in particular, the increase in number of schools in counties in Indiana (see Figure \ref{fig:indiana}). The functions `dotsInPolys` of the `maptools` package [@maptools] and `point.in.polygon` of the `sp` package [@sp1, @sp2]. 
+@waller (p.82) warn from using density maps for public health statistics, because of the fear that readers might be misled into believing that the (random) locations are geographically accurate occurrences of events. 
 
+![Excerpt from plate #59 of the Statistical Atlas of 1883 showing density maps of the number of schools in counties of Indiana in 1853 (left) and 1880 (right)\label{fig:indiana}](inst/images/indiana-schools.png)
+
+
+# References
