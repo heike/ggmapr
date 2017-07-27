@@ -49,4 +49,3 @@ counties_inset \%>\% ggplot(aes(x = long, y = lat)) +
 }
 }
 \keyword{datasets}
-

@@ -62,7 +62,7 @@ counties_inset %>% ggplot(aes(x = long, y = lat)) +
 
 # Sampling from a uniform distribution
 
-Below are maps of the US overlaid by about 3200 points each. The points are placed uniformly within the geographic region. The number of points in each region is based on different strategies. From left to right we have: (top-left) a sample of locations selected uniformly across the US, (top-right) each state contains a set of 63 uniformly selected locations, (bottom-left) each dot represents about 100k residents in each state.
+Below are maps of the US overlaid by about 3200 points each. The points are placed uniformly within the geographic region. The number of points in each region is based on different strategies, but in all three maps each dot represents approximately 100k people. From left to right we have: (left) a sample of locations selected uniformly across the US, (middle) each state contains a set of 63 uniformly selected locations, (right) the number of points within each state is proportional to the state's population.
 
 ![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
 
@@ -114,10 +114,12 @@ What we see now, is the geographical pattern from before: fried turkeys are (dis
 
 ## Some discussion
 
-Density maps are not new - some of the first examples appear in the Statistical Atlas accompanying the tenth US census of 1880 [@atlas] to show the number and, in particular, the increase in number of schools in counties in Indiana (see Figure \ref{fig:indiana}). The functions `dotsInPolys` of the `maptools` package [@maptools] and `point.in.polygon` of the `sp` package [@sp1, @sp2]. 
-@waller (p.82) warn from using density maps for public health statistics, because of the fear that readers might be misled into believing that the (random) locations are geographically accurate occurrences of events. 
-
 ![Excerpt from plate #59 of the Statistical Atlas of 1883 showing density maps of the number of schools in counties of Indiana in 1853 (left) and 1880 (right)\label{fig:indiana}](inst/images/indiana-schools.png)
 
+Density maps are not new - some of the first examples (see Figure \ref{fig:indiana}) appear in the Statistical Atlas accompanying the tenth US census of 1880 [@atlas] to show the number and, in particular, the increase in number of schools in counties in Indiana (see Figure \ref{fig:indiana}). The functions `dotsInPolys` of the `maptools` package [@maptools] and `point.in.polygon` of the `sp` package [@sp1, @sp2]. 
+@waller (p.82) warn from using density maps for public health statistics. However, the only point the authors raise is that readers might be misled into believing that the (random) locations are geographically accurate occurrences of events. 
+
+
+XXX Interesting discussion at http://axismaps.github.io/thematic-cartography/articles/dot_density.html
 
 # References

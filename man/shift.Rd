@@ -39,4 +39,3 @@ states01 \%>\%
   filter(lat > 20) \%>\%
   ggplot(aes(long, lat)) + geom_polygon(aes(group=group, fill=factor(REGION)))
 }
-

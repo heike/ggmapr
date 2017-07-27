@@ -30,4 +30,3 @@ inset <- inset  \%>\%
 inset \%>\%
   ggplot(aes(long, lat)) + geom_path(aes(group=group))
 }
-

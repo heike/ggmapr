@@ -18,4 +18,3 @@ states <- states \%>\% mutate(
 long = replace(long, long > 100, long[long > 100]-360)
 )
 }
-

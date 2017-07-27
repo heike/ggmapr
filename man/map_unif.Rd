@@ -41,4 +41,3 @@ inset \%>\% ggplot(aes(x = long, y = lat)) +
   geom_point(data = df, colour = "red", size = .5) +
   ggthemes::theme_map()
 }
-

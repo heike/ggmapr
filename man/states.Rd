@@ -2,9 +2,9 @@
 % Please edit documentation in R/data.R
 \docType{data}
 \name{states}
-\alias{division}
-\alias{inset}
 \alias{states}
+\alias{inset}
+\alias{division}
 \title{Outline of US states and equivalents}
 \format{both objects are data frames consisting of variables of length ~13k:
 \itemize{
@@ -55,4 +55,3 @@ division \%>\% ggplot(aes(x = long, y = lat)) +
   geom_point(data = division \%>\% map_unif(n = 1000), colour = "red", size = 0.25)
 }
 \keyword{datasets}
-

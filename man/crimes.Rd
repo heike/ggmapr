@@ -27,4 +27,3 @@ crimes \%>\% dplyr::filter(Type=="Murder") \%>\%
     geom_line(aes(group = State))
 }
 \keyword{datasets}
-

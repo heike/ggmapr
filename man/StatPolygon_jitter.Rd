@@ -4,7 +4,7 @@
 \name{StatPolygon_jitter}
 \alias{StatPolygon_jitter}
 \title{ggplot2 stat for creating a sample of jittered points in a polygon}
-\format{An object of class \code{StatPolygon_jitter} (inherits from \code{Stat}, \code{ggproto}) of length 4.}
+\format{An object of class \code{StatPolygon_jitter} (inherits from \code{Stat}, \code{ggproto}, \code{gg}) of length 4.}
 \usage{
 StatPolygon_jitter
 }
@@ -25,4 +25,3 @@ ggplot(data = crime.map, aes(x = long, y = lat)) +
 
 }
 \keyword{datasets}
-

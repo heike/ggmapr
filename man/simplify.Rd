@@ -20,4 +20,3 @@ states05 \%>\% ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group))
 states01 <- simplify(states, 0.01)
 states01 \%>\% ggplot(aes(x = long, y = lat)) + geom_path(aes(group = group))
 }
-
