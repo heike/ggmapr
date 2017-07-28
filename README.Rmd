@@ -76,6 +76,24 @@ counties_inset %>% ggplot(aes(x = long, y = lat)) +
   ggthemes::theme_map() 
 ```
 
+
+## Scale one or many?
+
+Scaling the whole object is not very impressive looking, because the only thing that visibly changes is the axis labelling. 
+Using  `nest` and `unnest` we can get the scaling at a grouping level:
+
+```{r, fig.width=4, fig.height = 3}
+counties %>% filter(STATE == "Iowa") %>%
+  tidyr::nest(-group) %>%
+  mutate( data = data %>%
+  purrr::map(.f = function(x) scale(x, scale=0.8))) %>%
+  tidyr::unnest(data) %>%
+  ggplot(aes(x = long, y = lat, group = group)) + geom_polygon() +
+  ggtitle("Iowa counties at 80% size") +
+  ggthemes::theme_map()
+```
+
+
 # Sampling from a uniform distribution
 
 Below are maps of the US overlaid by about 3200 points each. The points are placed uniformly within the geographic region. The number of points in each region is based on different strategies, but in all three maps each dot represents approximately 100k people. From left to right we have: (left) a sample of locations selected uniformly across the US, (middle) each state contains a set of 63 uniformly selected locations, (right) the number of points within each state is proportional to the state's population.

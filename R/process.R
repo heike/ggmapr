@@ -60,7 +60,7 @@ scale <- function(map, condition = NULL, scale = 1, set_to = NULL) {
   long <- lat <- condition__ <- NULL
   map <- data.frame(map)
   conditionCall <- substitute(condition)
-  if (!is.null (condition)) {
+  if (!is.null (conditionCall)) {
     map$condition__ <- eval(conditionCall, map)
     submap <- map %>% filter(condition__==TRUE)
   } else {
@@ -83,7 +83,7 @@ scale <- function(map, condition = NULL, scale = 1, set_to = NULL) {
     lat = scale[2]*(lat - my) + delta_y
   )
 
-  if (!is.null(condition))  {
+  if (!is.null(conditionCall))  {
     map <- map %>% filter(condition__ != TRUE)
     out_df <- rbind(map, submap) %>% select(-condition__)
   } else {
@@ -103,8 +103,8 @@ scale <- function(map, condition = NULL, scale = 1, set_to = NULL) {
 #' @importFrom dplyr mutate filter
 #' @export
 #' @examples
-#' data(states01)
-#' states01 %>%
+#' data(states)
+#' states %>%
 #'   shift(DIVISION == "1", shift_by=c(7.5, 0)) %>%
 #'   shift(DIVISION == "2", shift_by=c(5, 0)) %>%
 #'   shift(DIVISION == "3", shift_by=c(2.5, 0)) %>%
@@ -126,11 +126,10 @@ shift <- function(map, condition = NULL, shift_by = c(0,0), set_to = NULL) {
   map <- data.frame(map)
   stopifnot(!is.null(map$long), !is.null(map$lat))
   long <- lat <- condition__ <- NULL
+  conditionCall <- substitute(condition)
 
-  if (!is.null(condition)) {
-    conditionCall <- substitute(condition)
+  if (!is.null(conditionCall)) {
     map$condition__ <- eval(conditionCall, map)
-
     submap <- map %>% filter(condition__==TRUE)
   } else {
     submap = map
@@ -149,7 +148,7 @@ shift <- function(map, condition = NULL, shift_by = c(0,0), set_to = NULL) {
     lat = lat + delta_y
   )
 
-  if (!is.null(Condition)) {
+  if (!is.null(conditionCall)) {
     map <- map %>% filter(condition__ != TRUE)
     out_df <- rbind(map, submap) %>% dplyr::select(- condition__)
   } else out_df <- submap

@@ -10,9 +10,6 @@ Heike Hofmann
 This R package is helping with working with maps by making insets, pull-outs or zooms:
 
 
-```
-## Warning: package 'ggplot2' was built under R version 3.3.2
-```
 
 ![](README_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
 
@@ -60,11 +57,32 @@ counties_inset %>% ggplot(aes(x = long, y = lat)) +
 
 ![](README_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
 
+
+## Scale one or many?
+
+Scaling the whole object is not very impressive looking, because the only thing that visibly changes is the axis labelling. 
+Using  `nest` and `unnest` we can get the scaling at a grouping level:
+
+
+```r
+counties %>% filter(STATE == "Iowa") %>%
+  tidyr::nest(-group) %>%
+  mutate( data = data %>%
+  purrr::map(.f = function(x) scale(x, scale=0.8))) %>%
+  tidyr::unnest(data) %>%
+  ggplot(aes(x = long, y = lat, group = group)) + geom_polygon() +
+  ggtitle("Iowa counties at 80% size") +
+  ggthemes::theme_map()
+```
+
+![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+
+
 # Sampling from a uniform distribution
 
 Below are maps of the US overlaid by about 3200 points each. The points are placed uniformly within the geographic region. The number of points in each region is based on different strategies, but in all three maps each dot represents approximately 100k people. From left to right we have: (left) a sample of locations selected uniformly across the US, (middle) each state contains a set of 63 uniformly selected locations, (right) the number of points within each state is proportional to the state's population.
 
-![](README_files/figure-html/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 
 The function underlying the map based random sampling is `map_unif`. This function takes a map (or a subset of a map) and a number `n` and produces a dataset of `n` uniformly distributed random geo-locations within the area specified by the map.
@@ -85,18 +103,18 @@ The FiveThirtyEight chart is fun, but it doesn't show the whole picture. What el
 
 
 Looking at how participants said to prepare their turkeys we see that the country is mostly divided between Roasting and Baking the turkey, but some proportion of participants said that their turkey was being fried (orange). When we look closer, we see that there is a geographical component to where turkeys are getting fried.
-![](README_files/figure-html/unnamed-chunk-8-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
 
 For the side dishes, FiveThirtyEight styled a chart showing the ***disproportionally most common*** side dish. We have adapted the underlying model to deal with the ***disproportionally most common*** way of preparing the main dish. This gives a nice and simple map like this:
 
-![](README_files/figure-html/unnamed-chunk-9-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
 
 We see that in the South and South East turkey's are being fried disproportionally most often, whereas everywhere else it is a toss-up between roasting and baking the bird.
 But is that the whole picture ... and what does disproprotionally most common actually mean?
 
 Let's go back to the raw data and put those on the map:
 
-![](README_files/figure-html/unnamed-chunk-10-1.png)<!-- -->
+![](README_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
 We get a similar picture, if not quite as simple as the previous map - but data is rarely that simple! We still see the toss-up between baking and roasting. And it looks like the bakers of turkey are in the lead in the North East and the Mounatin division.
 What we also see is the geographical connection of the fried turkeys: the South and South East sees more of them, but there are some friers all along the East Coast, that we didn't see before.
@@ -105,9 +123,9 @@ Going back to the (loglinear) model of the ways turkeys are cooked by division, 
 
 
 
-![](README_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
-
 ![](README_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+
+![](README_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 What we see now, is the geographical pattern from before: fried turkeys are (disproportionally) most common in the South East, and we see the split between baked and roasted turkey across the country - with roasted turkey in particular most popular in New England. What we find additionally, though, is that besides fried turkey in the South East, we also see a liking of baked turkey that was not apparent before.
 
@@ -121,5 +139,8 @@ Density maps are not new - some of the first examples (see Figure \ref{fig:india
 
 
 XXX Interesting discussion at http://axismaps.github.io/thematic-cartography/articles/dot_density.html
+
+XXX Just for fun https://xkcd.com/1845/
+
 
 # References
