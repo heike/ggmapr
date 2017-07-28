@@ -39,14 +39,33 @@ process_shape <- function(path) {
 #'   filter(lat > 20)
 #' inset %>%
 #'   ggplot(aes(long, lat)) + geom_path(aes(group=group))
-scale <- function(map, condition, scale = 1, set_to = NULL) {
+#'
+#' # Iowa in a Manhattan block design
+#' counties %>% filter(STATE == "Iowa") %>%
+#'   tidyr::nest(-group) %>%
+#'   mutate( data = data %>%
+#'   purrr::map(.f = function(x) scale(x, scale=0.8))) %>%
+#'   unnest(data) %>%
+#'   ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
+#'
+#' # North Carolina becomes more giraffe-like this way.
+#' counties %>% filter(STATE == "North Carolina") %>%
+#'   tidyr::nest(-group) %>%
+#'   mutate( data = data %>%
+#'   purrr::map(.f = function(x) scale(x, scale=0.9))) %>%
+#'   unnest(data) %>%
+#'   ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
+scale <- function(map, condition = NULL, scale = 1, set_to = NULL) {
   stopifnot(!is.null(map$long), !is.null(map$lat))
   long <- lat <- condition__ <- NULL
   map <- data.frame(map)
   conditionCall <- substitute(condition)
-  map$condition__ <- eval(conditionCall, map)
-
-  submap <- map %>% filter(condition__==TRUE)
+  if (!is.null (condition)) {
+    map$condition__ <- eval(conditionCall, map)
+    submap <- map %>% filter(condition__==TRUE)
+  } else {
+    submap <- map
+  }
   mx <- mean(range(submap$long))
   my <- mean(range(submap$lat))
 
@@ -64,8 +83,14 @@ scale <- function(map, condition, scale = 1, set_to = NULL) {
     lat = scale[2]*(lat - my) + delta_y
   )
 
-  map <- map %>% filter(condition__ != TRUE)
-  rbind(map, submap) %>% select(-condition__)
+  if (!is.null(condition))  {
+    map <- map %>% filter(condition__ != TRUE)
+    out_df <- rbind(map, submap) %>% select(-condition__)
+  } else {
+    out_df <- submap
+  }
+
+  out_df
 }
 
 
@@ -97,15 +122,19 @@ scale <- function(map, condition, scale = 1, set_to = NULL) {
 #'   shift(REGION == "3", shift_by=c(0, -1.25)) %>%
 #'   filter(lat > 20) %>%
 #'   ggplot(aes(long, lat)) + geom_polygon(aes(group=group, fill=factor(REGION)))
-shift <- function(map, condition, shift_by = c(0,0), set_to = NULL) {
+shift <- function(map, condition = NULL, shift_by = c(0,0), set_to = NULL) {
   map <- data.frame(map)
   stopifnot(!is.null(map$long), !is.null(map$lat))
   long <- lat <- condition__ <- NULL
 
-  conditionCall <- substitute(condition)
-  map$condition__ <- eval(conditionCall, map)
+  if (!is.null(condition)) {
+    conditionCall <- substitute(condition)
+    map$condition__ <- eval(conditionCall, map)
 
-  submap <- map %>% filter(condition__==TRUE)
+    submap <- map %>% filter(condition__==TRUE)
+  } else {
+    submap = map
+  }
   delta_x <- shift_by[1]
   delta_y <- shift_by[2]
 
@@ -120,8 +149,12 @@ shift <- function(map, condition, shift_by = c(0,0), set_to = NULL) {
     lat = lat + delta_y
   )
 
-  map <- map %>% filter(condition__ != TRUE)
-  rbind(map, submap) %>% dplyr::select(- condition__)
+  if (!is.null(Condition)) {
+    map <- map %>% filter(condition__ != TRUE)
+    out_df <- rbind(map, submap) %>% dplyr::select(- condition__)
+  } else out_df <- submap
+
+  out_df
 }
 
 
