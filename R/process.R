@@ -6,11 +6,11 @@
 #' @param path  path to shapefile
 #' @export
 #' @examples
-#' states <- process_shape("data-raw/tl_2016_us_state/tl_2016_us_state.shp")
+#' states <- read_shape("data-raw/tl_2016_us_state/tl_2016_us_state.shp")
 #' states <- states %>% mutate(
 #' long = replace(long, long > 100, long[long > 100]-360)
 #' )
-process_shape <- function(path) {
+read_shape <- function(path) {
   stopifnot(file.exists(path))
 
   dframe <- maptools::readShapePoly(path)
@@ -45,7 +45,7 @@ process_shape <- function(path) {
 #'   tidyr::nest(-group) %>%
 #'   mutate( data = data %>%
 #'   purrr::map(.f = function(x) scale(x, scale=0.8))) %>%
-#'   unnest(data) %>%
+#'   tidyr::unnest(data) %>%
 #'   ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
 #'
 #' # North Carolina becomes more giraffe-like this way.
@@ -53,7 +53,7 @@ process_shape <- function(path) {
 #'   tidyr::nest(-group) %>%
 #'   mutate( data = data %>%
 #'   purrr::map(.f = function(x) scale(x, scale=0.9))) %>%
-#'   unnest(data) %>%
+#'   tidyr::unnest(data) %>%
 #'   ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
 scale <- function(map, condition = NULL, scale = 1, set_to = NULL) {
   stopifnot(!is.null(map$long), !is.null(map$lat))

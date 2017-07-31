@@ -9,14 +9,14 @@
 #' nc <- st_read(system.file("shape/nc.shp", package="sf"))
 #' gnc <- sf_unnest(nc, geometry)
 #' gnc %>% ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
-sf_unnest <- function(data, ...) {
+unnest_sf <- function(data, ...) {
   dots <- lazyeval::lazy_dots(...)
   if (length(dots) == 0) {
     list_cols <- names(data)[vapply(data, is.list, logical(1))]
     list_col_names <- lapply(list_cols, as.name)
     dots <- lazyeval::as.lazy_dots(list_col_names, env = parent.frame())
   }
-  sf_unnest_(data, dots)
+  unnest_sf_(data, dots)
 }
 
 #' Convert multipolygon simple feature from sf format
@@ -25,7 +25,9 @@ sf_unnest <- function(data, ...) {
 #' @param data data set
 #' @param unnest_cols one or more columns to extract (one is tested, you're on your own with multiple)
 #' @export
-sf_unnest_ <- function (data, unnest_cols) {
+unnest_sf_ <- function (data, unnest_cols) {
+  id <- NULL # just to initialize
+
   nested <- dplyr::transmute_(data, .dots = unnest_cols)
   nested_i <- nested[[1]]
   nested_df <- lapply(1:length(nested_i), function(i) {

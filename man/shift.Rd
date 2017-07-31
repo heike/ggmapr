@@ -19,8 +19,8 @@ shift(map, condition = NULL, shift_by = c(0, 0), set_to = NULL)
 Shift region on a map
 }
 \examples{
-data(states01)
-states01 \%>\%
+data(states)
+states \%>\%
   shift(DIVISION == "1", shift_by=c(7.5, 0)) \%>\%
   shift(DIVISION == "2", shift_by=c(5, 0)) \%>\%
   shift(DIVISION == "3", shift_by=c(2.5, 0)) \%>\%

@@ -35,7 +35,7 @@ counties \%>\% filter(STATE == "Iowa") \%>\%
   tidyr::nest(-group) \%>\%
   mutate( data = data \%>\%
   purrr::map(.f = function(x) scale(x, scale=0.8))) \%>\%
-  unnest(data) \%>\%
+  tidyr::unnest(data) \%>\%
   ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
 
 # North Carolina becomes more giraffe-like this way.
@@ -43,6 +43,6 @@ counties \%>\% filter(STATE == "North Carolina") \%>\%
   tidyr::nest(-group) \%>\%
   mutate( data = data \%>\%
   purrr::map(.f = function(x) scale(x, scale=0.9))) \%>\%
-  unnest(data) \%>\%
+  tidyr::unnest(data) \%>\%
   ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
 }
