@@ -116,7 +116,7 @@ Let's go back to the raw data and put those on the map:
 
 ![](README_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
 
-We get a similar picture, if not quite as simple as the previous map - but data is rarely that simple! We still see the toss-up between baking and roasting. And it looks like the bakers of turkey are in the lead in the North East and the Mounatin division.
+We get a similar picture, if not quite as simple as the previous map - but data is rarely that simple! We still see the toss-up between baking and roasting. And it looks like the bakers of turkey are in the lead in the North East and the Mountain division.
 What we also see is the geographical connection of the fried turkeys: the South and South East sees more of them, but there are some friers all along the East Coast, that we didn't see before.
 
 Going back to the (loglinear) model of the ways turkeys are cooked by division, we can visualize the residuals using randomly picked locations in each of the divisions. 
@@ -142,5 +142,13 @@ XXX Interesting discussion at http://axismaps.github.io/thematic-cartography/art
 
 XXX Just for fun https://xkcd.com/1845/
 
+# Getting it to work
+
+```
+if (!require(devtools)) {
+    install.packages("devtools")
+}
+devtools::install_github("heike/ggmapr")
+```
 
 # References
