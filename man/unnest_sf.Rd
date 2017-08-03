@@ -17,6 +17,6 @@ Works for multipolygon simple features (see package `sf`) only.
 \examples{
 library(sf)
 nc <- st_read(system.file("shape/nc.shp", package="sf"))
-gnc <- sf_unnest(nc, geometry)
+gnc <- unnest_sf(nc, geometry)
 gnc \%>\% ggplot(aes(x = long, y = lat, group = group)) + geom_polygon()
 }
