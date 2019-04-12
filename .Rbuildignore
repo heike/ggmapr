@@ -4,3 +4,4 @@
 ^README.*$
 ^data-raw$
 ^refs.*$
+^stuff$

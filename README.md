@@ -1,6 +1,12 @@
-# ggmapr
-Heike Hofmann  
-`r format(Sys.time(), '%B %d, %Y')`  
+---
+title: "ggmapr"
+author: "Heike Hofmann"
+date: "April 11, 2019"
+output: 
+  html_document:
+    keep_md: true
+bibliography: refs.bib
+---
 
 
 

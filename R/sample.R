@@ -73,10 +73,14 @@ stat_polygon_jitter <- function(mapping = NULL, data = NULL, geom = "point",
 #' df <- inset %>% map_unif(5000)
 #' inset %>% ggplot(aes(x = long, y = lat)) +
 #'   geom_path(aes(group = group)) +
-#'   geom_point(data = df, colour = "red")
+#'   geom_point(data = df, colour = "red", size = 0.5)
 #'
 #' data(crimes)
 #' population <- crimes %>% filter(Year == max(Year))
+#' population$Abb <- as.character(population$Abb)
+#' population <- population %>% mutate(
+#'   Abb = replace(Abb, Abb=="D.C.", "DC")
+#' )
 #' popmap <- left_join(inset, population[,c("Abb", "Population")],
 #'                     by=c("STUSPS"="Abb"))
 #' poplist <- popmap %>% tidyr::nest(-NAME)
